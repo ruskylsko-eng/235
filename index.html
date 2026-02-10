@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="ru" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Арифметические выражения в Python</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    * {
+      font-family: 'Nunito', sans-serif;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .card-shadow {
+      box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+    }
+    .code-block {
+      background: #1e1e3f;
+      border-radius: 12px;
+      font-family: 'Fira Code', 'Consolas', monospace;
+    }
+    .nav-item {
+      transition: all 0.3s ease;
+    }
+    .nav-item:hover {
+      transform: translateY(-2px);
+    }
+    .nav-item.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .traffic-light {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 4px solid transparent;
+    }
+    .traffic-light:hover {
+      transform: scale(1.1);
+    }
+    .traffic-light.selected {
+      border-color: #1e1e3f;
+      box-shadow: 0 0 20px currentColor;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full bg-gray-50">
+  <div id="app" class="h-full overflow-auto">
+   <div id="start-screen" class="min-h-full gradient-bg flex items-center justify-center p-6">
+    <div class="bg-white rounded-3xl card-shadow p-8 max-w-md w-full text-center fade-in">
+     <div class="mb-6 flex items-center justify-center gap-3"><img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python Logo" width="56" height="56" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.style.background='linear-gradient(135deg, #3776AB, #FFD43B)'; this.alt='Python logo unavailable';" style="object-fit: contain;"> <span class="text-3xl font-extrabold text-blue-600">Python</span>
+     </div>
+     <h1 id="main-title" class="text-2xl font-extrabold text-gray-800 mb-2">Арифметические выражения в Python</h1>
+     <p id="teacher-msg" class="text-gray-500 mb-6">Добро пожаловать на урок!</p>
+     <div class="space-y-4"><input type="text" id="student-name" placeholder="Введите ваше имя" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-center text-lg"> <button onclick="startLesson()" class="btn-primary w-full py-3 rounded-xl text-white font-bold text-lg"> Начать урок </button> <button onclick="showTeacherPanel()" class="w-full py-3 rounded-xl border-2 border-purple-500 text-purple-600 font-bold hover:bg-purple-50 transition"> Панель учителя </button>
+     </div>
+    </div>
+   </div>
+   <div id="lesson-screen" class="min-h-full hidden">
+    <nav class="gradient-bg p-4 sticky top-0 z-50">
+     <div class="max-w-6xl mx-auto">
+      <div class="flex items-center justify-between mb-4">
+       <div class="flex items-center gap-3"><span class="text-2xl">🐍</span> <span id="student-display" class="text-white font-bold"></span>
+       </div>
+       <div class="flex items-center gap-2"><span class="bg-white/20 px-4 py-2 rounded-full text-white font-bold"> Баллы: <span id="total-points">0</span>/100 </span>
+       </div>
+      </div>
+      <div class="flex gap-2 overflow-x-auto pb-2"><button onclick="showSection('theory')" class="nav-item active px-4 py-2 rounded-xl bg-white/20 text-white font-semibold whitespace-nowrap" data-section="theory"> Теория </button> <button onclick="showSection('tasks')" class="nav-item px-4 py-2 rounded-xl bg-white/20 text-white font-semibold whitespace-nowrap" data-section="tasks"> Задачи </button> <button onclick="showSection('practice')" class="nav-item px-4 py-2 rounded-xl bg-white/20 text-white font-semibold whitespace-nowrap" data-section="practice"> Практика </button> <button onclick="showSection('quiz')" class="nav-item px-4 py-2 rounded-xl bg-white/20 text-white font-semibold whitespace-nowrap" data-section="quiz"> Тест </button> <button onclick="showSection('reflection')" class="nav-item px-4 py-2 rounded-xl bg-white/20 text-white font-semibold whitespace-nowrap" data-section="reflection"> Рефлексия </button>
+      </div>
+     </div>
+    </nav>
+    <main class="max-w-4xl mx-auto p-6">
+     <section id="theory" class="fade-in">
+      <div class="bg-white rounded-2xl card-shadow p-6 mb-6">
+       <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Теория: Арифметические операции в Python</h2>
+       <div class="space-y-6">
+        <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-5 border-l-4 border-orange-500">
+         <h3 class="font-bold text-lg text-orange-800 mb-3">📚 Определения</h3>
+         <div class="space-y-3 text-gray-700">
+          <div>
+           <p class="font-semibold text-orange-700">Арифметические операции:</p>
+           <p class="text-sm">Это действия с числами: сложение (+), вычитание (-), умножение (*), деление (/), и другие математические операции.</p>
+          </div>
+          <div>
+           <p class="font-semibold text-orange-700">Арифметические выражения:</p>
+           <p class="text-sm">Это комбинация чисел и арифметических операций. Например: 2 + 3, 10 * 5 - 2, (3 + 4) / 2</p>
+          </div>
+         </div>
+        </div>
+        <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-5">
+         <h3 class="font-bold text-lg text-purple-800 mb-4">Базовые операции</h3>
+         <div class="space-y-3">
+          <div class="bg-white rounded-lg p-4">
+           <div class="flex items-center gap-3 mb-2"><span class="text-2xl font-mono text-purple-600 font-bold">+</span> <span class="font-semibold text-gray-700">Сложение</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono">
+            print(5 + 3) <span class="text-gray-400"># Результат: 8</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4">
+           <div class="flex items-center gap-3 mb-2"><span class="text-2xl font-mono text-purple-600 font-bold">-</span> <span class="font-semibold text-gray-700">Вычитание</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono">
+            print(10 - 4) <span class="text-gray-400"># Результат: 6</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4">
+           <div class="flex items-center gap-3 mb-2"><span class="text-2xl font-mono text-purple-600 font-bold">*</span> <span class="font-semibold text-gray-700">Умножение</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono">
+            print(6 * 7) <span class="text-gray-400"># Результат: 42</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4">
+           <div class="flex items-center gap-3 mb-2"><span class="text-2xl font-mono text-purple-600 font-bold">/</span> <span class="font-semibold text-gray-700">Деление (обычное)</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono">
+            print(20 / 4) <span class="text-gray-400"># Результат: 5.0</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4">
+           <div class="flex items-center gap-3 mb-2"><span class="text-2xl font-mono text-purple-600 font-bold">//</span> <span class="font-semibold text-gray-700">Целое деление</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono">
+            print(17 // 5) <span class="text-gray-400"># Результат: 3</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4">
+           <div class="flex items-center gap-3 mb-2"><span class="text-2xl font-mono text-purple-600 font-bold">%</span> <span class="font-semibold text-gray-700">Остаток от деления</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono">
+            print(17 % 5) <span class="text-gray-400"># Результат: 2</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4">
+           <div class="flex items-center gap-3 mb-2"><span class="text-2xl font-mono text-purple-600 font-bold">**</span> <span class="font-semibold text-gray-700">Возведение в степень</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono">
+            print(2 ** 3) <span class="text-gray-400"># Результат: 8</span>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-5">
+         <h3 class="font-bold text-lg text-blue-800 mb-3">Функция print() для вывода результатов</h3>
+         <div class="code-block p-4 text-green-400 text-sm">
+          <div class="mb-2">
+           <span class="text-gray-400"># Примеры:</span>
+          </div>
+          <div class="mb-1">
+           <span class="text-cyan-300">print(2 + 3)</span> <span class="text-gray-400"># Выведет: 5</span>
+          </div>
+          <div class="mb-1">
+           <span class="text-cyan-300">print(10 * 5)</span> <span class="text-gray-400"># Выведет: 50</span>
+          </div>
+          <div class="mb-4">
+           <span class="text-cyan-300">print(2 ** 3)</span> <span class="text-gray-400"># Выведет: 8</span>
+          </div>
+         </div>
+        </div>
+        <div class="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-5">
+         <h3 class="font-bold text-lg text-green-800 mb-4">📐 Математические функции (модуль math)</h3>
+         <div class="bg-white rounded-lg p-3 mb-4">
+          <p class="text-sm text-gray-700"><strong>Что такое модуль math?</strong> Это встроенная библиотека Python с математическими функциями. Импортируй её так:</p>
+          <div class="code-block p-2 text-green-400 text-sm font-mono mt-2">
+           import math
+          </div>
+         </div>
+         <div class="space-y-3">
+          <div class="bg-white rounded-lg p-4 border-l-4 border-green-500">
+           <div class="flex items-center gap-2 mb-2"><span class="text-lg font-semibold text-green-700">pow(x, y)</span> <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Степень</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono mb-2">
+            import math<br>
+            print(math.pow(2, 3)) <span class="text-gray-400"># Результат: 8.0</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4 border-l-4 border-green-500">
+           <div class="flex items-center gap-2 mb-2"><span class="text-lg font-semibold text-green-700">sqrt(x)</span> <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Квадратный корень</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono mb-2">
+            import math<br>
+            print(math.sqrt(16)) <span class="text-gray-400"># Результат: 4.0</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4 border-l-4 border-green-500">
+           <div class="flex items-center gap-2 mb-2"><span class="text-lg font-semibold text-green-700">ceil(x)</span> <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Округление вверх</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono mb-2">
+            import math<br>
+            print(math.ceil(4.3)) <span class="text-gray-400"># Результат: 5</span>
+           </div>
+          </div>
+          <div class="bg-white rounded-lg p-4 border-l-4 border-green-500">
+           <div class="flex items-center gap-2 mb-2"><span class="text-lg font-semibold text-green-700">floor(x)</span> <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Округление вниз</span>
+           </div>
+           <div class="code-block p-2 text-green-400 text-sm font-mono mb-2">
+            import math<br>
+            print(math.floor(4.9)) <span class="text-gray-400"># Результат: 4</span>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><button onclick="completeTheory()" id="theory-btn" class="btn-primary w-full mt-6 py-3 rounded-xl text-white font-bold"> Я изучил(а) теорию </button>
+      </div>
+     </section>
+     <section id="tasks" class="hidden fade-in">
+      <div class="bg-white rounded-2xl card-shadow p-6 mb-6">
+       <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Задачи: Напиши эти выражения на Python</h2>
+       <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 mb-6">
+        <p class="text-sm text-gray-700"><strong>Пример:</strong> Выражение <code class="bg-white px-2 py-1 rounded">2+3</code> следует написать как <code class="bg-white px-2 py-1 rounded font-mono font-bold">print(2+3)</code></p>
+       </div>
+       <div id="tasks-container" class="space-y-4">
+       </div>
+       <div id="tasks-result" class="hidden mt-6 p-4 rounded-xl text-center font-bold text-lg"></div><button onclick="checkTasks()" id="check-tasks-btn" class="btn-primary w-full mt-6 py-3 rounded-xl text-white font-bold"> Проверить ответы </button>
+      </div>
+     </section>
+     <section id="practice" class="hidden fade-in">
+      <div class="bg-white rounded-2xl card-shadow p-6 mb-6">
+       <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Практика: Вычисли результат</h2>
+       <div id="practice-container" class="space-y-4">
+       </div>
+       <div id="practice-result" class="hidden mt-6 p-4 rounded-xl text-center font-bold text-lg"></div><button onclick="checkPractice()" id="check-practice-btn" class="btn-primary w-full mt-6 py-3 rounded-xl text-white font-bold"> Проверить результаты </button>
+      </div>
+     </section>
+     <section id="quiz" class="hidden fade-in">
+      <div class="bg-white rounded-2xl card-shadow p-6 mb-6">
+       <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Тест: Выбери правильный ответ</h2>
+       <div id="quiz-container" class="space-y-6">
+       </div>
+       <div id="quiz-result" class="hidden mt-6 p-4 rounded-xl text-center font-bold text-lg"></div><button onclick="checkQuiz()" id="check-quiz-btn" class="btn-primary w-full mt-6 py-3 rounded-xl text-white font-bold"> Завершить тест </button>
+      </div>
+     </section>
+     <section id="reflection" class="hidden fade-in">
+      <div class="bg-white rounded-2xl card-shadow p-6 mb-6">
+       <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Рефлексия: Оцени свою работу</h2>
+       <div class="flex justify-center gap-8 mb-8">
+        <div class="text-center">
+         <div onclick="selectReflection('green')" class="traffic-light bg-green-500 mx-auto mb-2" id="light-green"></div>
+         <p class="text-sm font-semibold text-gray-700">Всё ясно</p>
+        </div>
+        <div class="text-center">
+         <div onclick="selectReflection('yellow')" class="traffic-light bg-yellow-400 mx-auto mb-2" id="light-yellow"></div>
+         <p class="text-sm font-semibold text-gray-700">Есть вопросы</p>
+        </div>
+        <div class="text-center">
+         <div onclick="selectReflection('red')" class="traffic-light bg-red-500 mx-auto mb-2" id="light-red"></div>
+         <p class="text-sm font-semibold text-gray-700">Нужна помощь</p>
+        </div>
+       </div>
+       <div id="reflection-message" class="hidden p-4 rounded-xl text-center mb-6"></div><button onclick="submitResults()" id="submit-btn" class="btn-primary w-full py-3 rounded-xl text-white font-bold disabled:opacity-50" disabled> Отправить результаты </button>
+       <div id="submit-status" class="hidden mt-4 text-center"></div>
+      </div>
+      <div id="final-stats" class="hidden bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+       <h3 class="text-xl font-bold mb-4 text-center">Твои результаты</h3>
+       <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white/20 rounded-xl p-4 text-center">
+         <div class="text-3xl font-extrabold" id="final-total">
+          0
+         </div>
+         <div class="text-sm opacity-80">
+          Всего баллов
+         </div>
+        </div>
+        <div class="bg-white/20 rounded-xl p-4 text-center">
+         <div class="text-3xl font-extrabold" id="final-grade">
+          -
+         </div>
+         <div class="text-sm opacity-80">
+          Оценка
+         </div>
+        </div>
+       </div>
+      </div>
+     </section>
+    </main>
+   </div>
+   <div id="teacher-login" class="min-h-full hidden bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center p-6">
+    <div class="bg-white rounded-2xl card-shadow p-8 max-w-md w-full text-center">
+     <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Панель учителя</h2>
+     <p class="text-gray-500 mb-6">Введи пароль для доступа</p>
+     <div class="space-y-4"><input type="password" id="teacher-password" placeholder="Введи пароль" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-center text-lg" onkeypress="if(event.key==='Enter') checkTeacherPassword()">
+      <div id="password-error" class="hidden text-red-600 text-sm font-semibold"></div><button onclick="checkTeacherPassword()" class="btn-primary w-full py-3 rounded-xl text-white font-bold text-lg"> Войти </button> <button onclick="hideTeacherPanel()" class="w-full py-3 rounded-xl border-2 border-gray-300 text-gray-600 font-bold hover:bg-gray-50 transition"> Назад </button>
+     </div>
+    </div>
+   </div>
+   <div id="teacher-panel" class="min-h-full hidden bg-gray-100">
+    <nav class="bg-indigo-700 p-4">
+     <div class="max-w-6xl mx-auto flex items-center justify-between"><span class="text-white font-bold text-lg">Панель учителя</span> <button onclick="logoutTeacher()" class="bg-white/20 px-4 py-2 rounded-lg text-white hover:bg-white/30 transition"> Выход </button>
+     </div>
+    </nav>
+    <main class="max-w-6xl mx-auto p-6">
+     <div class="bg-white rounded-2xl card-shadow p-6 mb-6">
+      <div class="flex items-center justify-between mb-6">
+       <h2 class="text-xl font-bold text-gray-800">Результаты студентов</h2><button id="clear-results-btn" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition"> 🗑️ Очистить результаты </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+       <div class="bg-purple-100 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-purple-600" id="stat-total">
+         0
+        </div>
+        <div class="text-sm text-purple-800">
+         Всего студентов
+        </div>
+       </div>
+       <div class="bg-green-100 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-green-600" id="stat-green">
+         0
+        </div>
+        <div class="text-sm text-green-800">
+         Всё ясно
+        </div>
+       </div>
+       <div class="bg-yellow-100 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-yellow-600" id="stat-yellow">
+         0
+        </div>
+        <div class="text-sm text-yellow-800">
+         Есть вопросы
+        </div>
+       </div>
+       <div class="bg-red-100 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-red-600" id="stat-red">
+         0
+        </div>
+        <div class="text-sm text-red-800">
+         Нужна помощь
+        </div>
+       </div>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="w-full">
+        <thead>
+         <tr class="bg-gray-50">
+          <th class="px-4 py-3 text-left font-bold text-gray-700">Имя</th>
+          <th class="px-4 py-3 text-center font-bold text-gray-700">Теория</th>
+          <th class="px-4 py-3 text-center font-bold text-gray-700">Задачи</th>
+          <th class="px-4 py-3 text-center font-bold text-gray-700">Практика</th>
+          <th class="px-4 py-3 text-center font-bold text-gray-700">Тест</th>
+          <th class="px-4 py-3 text-center font-bold text-gray-700">Всего</th>
+          <th class="px-4 py-3 text-center font-bold text-gray-700">Рефлексия</th>
+          <th class="px-4 py-3 text-center font-bold text-gray-700">Оценка</th>
+         </tr>
+        </thead>
+        <tbody id="students-table">
+         <tr>
+          <td colspan="8" class="px-4 py-8 text-center text-gray-400">Нет результатов</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </main>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      lesson_title: 'Арифметические выражения в Python',
+      teacher_message: 'Добро пожаловать на урок!',
+    };
+
+    let config = { ...defaultConfig };
+    let studentData = [];
+    let currentStudent = {
+      name: '',
+      theoryCompleted: false,
+      tasksScore: 0,
+      practiceScore: 0,
+      quizScore: 0,
+      reflection: '',
+      totalScore: 0
+    };
+
+    const tasksData = [
+      { math: '2 + 3', answer: 'print(2 + 3)', hint: 'Используй функцию print() с выражением в скобках' },
+      { math: '10 - 4', answer: 'print(10 - 4)', hint: 'Все вычисления должны быть в скобках print()' },
+      { math: '5 * 6', answer: 'print(5 * 6)', hint: 'Умножение в Python обозначается звёздочкой (*)' },
+      { math: '20 / 4', answer: 'print(20 / 4)', hint: 'Не забудь print() в начале!' },
+      { math: '2 в степени 3', answer: 'print(2 ** 3)', hint: 'Степень обозначается двойной звёздочкой (**)' }
+    ];
+
+    const practiceData = [
+      { code: 'print(2 * 3 + 6)', answer: 12 },
+      { code: 'print(10 + 5 * 2)', answer: 20 },
+      { code: 'print((4 + 2) * 3)', answer: 18 },
+      { code: 'print(2 ** 3 + 4)', answer: 12 },
+      { code: 'print(20 // 3 + 2)', answer: 8 },
+      { code: 'print(25 - 10 / 2)', answer: 20 }
+    ];
+
+    const quizData = [
+      {
+        question: 'Какой оператор используется для возведения в степень?',
+        options: ['^', '**', 'pow', '^^'],
+        correct: 1
+      },
+      {
+        question: 'Чему равно 17 // 5?',
+        options: ['3.4', '3', '2', '4'],
+        correct: 1
+      },
+      {
+        question: 'Что выполняется первым: умножение или сложение?',
+        options: ['Сложение', 'Умножение', 'Одинаково', 'Зависит'],
+        correct: 1
+      },
+      {
+        question: 'Как вывести результат на Python?',
+        options: ['output()', 'display()', 'print()', 'show()'],
+        correct: 2
+      },
+      {
+        question: 'Чему равно 17 % 5?',
+        options: ['3', '2', '5', '17'],
+        correct: 1
+      },
+      {
+        question: 'Какая функция вычисляет квадратный корень?',
+        options: ['math.power()', 'math.sqrt()', 'math.root()', 'sqrt()'],
+        correct: 1
+      },
+      {
+        question: 'Что делает math.ceil()?',
+        options: ['Округляет вниз', 'Округляет вверх', 'Квадратный корень', 'Степень'],
+        correct: 1
+      },
+      {
+        question: 'Что делает math.floor()?',
+        options: ['Округляет вверх', 'Округляет вниз', 'Остаток', 'Корень'],
+        correct: 1
+      },
+      {
+        question: 'Чему равно 2 + 3 * 4?',
+        options: ['20', '14', '24', '9'],
+        correct: 1
+      },
+      {
+        question: 'Чему равно (10 + 5) / 3?',
+        options: ['5', '6.67', '5.0', '7'],
+        correct: 2
+      }
+    ];
+
+    const mathTasksData = [
+      { task: 'Напиши код для вычисления 3 в степени 4 с помощью math.pow()', answer: 'import math\nprint(math.pow(3, 4))', hint: 'Не забудь импортировать модуль math!' },
+      { task: 'Напиши код для вычисления квадратного корня из 25', answer: 'import math\nprint(math.sqrt(25))', hint: 'Используй math.sqrt()' },
+      { task: 'Округли 5.3 вверх используя math.ceil()', answer: 'import math\nprint(math.ceil(5.3))', hint: 'math.ceil() округляет вверх' },
+      { task: 'Округли 5.9 вниз используя math.floor()', answer: 'import math\nprint(math.floor(5.9))', hint: 'math.floor() округляет вниз' }
+    ];
+
+    const mathPracticeData = [
+      { code: 'import math\nprint(math.pow(2, 5))', answer: 32 },
+      { code: 'import math\nprint(math.sqrt(144))', answer: 12 },
+      { code: 'import math\nprint(int(math.ceil(7.2)))', answer: 8 },
+      { code: 'import math\nprint(int(math.floor(9.8)))', answer: 9 }
+    ];
+
+    async function initSDKs() {
+      if (window.dataSdk) {
+        await window.dataSdk.init({
+          onDataChanged: (data) => {
+            studentData = data;
+            updateTeacherPanel();
+          }
+        });
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...defaultConfig, ...newConfig };
+            applyConfig();
+          },
+          mapToCapabilities: () => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['lesson_title', cfg.lesson_title || defaultConfig.lesson_title],
+            ['teacher_message', cfg.teacher_message || defaultConfig.teacher_message]
+          ])
+        });
+      }
+
+      applyConfig();
+      initTasks();
+      initPractice();
+      initQuiz();
+    }
+
+    function applyConfig() {
+      document.getElementById('main-title').textContent = config.lesson_title || defaultConfig.lesson_title;
+      document.getElementById('teacher-msg').textContent = config.teacher_message || defaultConfig.teacher_message;
+    }
+
+    function initTasks() {
+      const container = document.getElementById('tasks-container');
+      const allTasksData = [...tasksData, ...mathTasksData];
+      container.innerHTML = allTasksData.map((item, i) => {
+        const taskLabel = item.math || item.task;
+        return `
+        <div class="bg-gray-50 rounded-xl p-4">
+          <div class="flex items-center gap-4 mb-3">
+            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-bold">${i + 1}</span>
+            <span class="text-lg font-semibold text-gray-700 flex-1">${taskLabel}</span>
+            <button onclick="showHint(${i})" class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-200 transition">
+              Подсказка
+            </button>
+          </div>
+          <div id="hint-${i}" class="hidden mb-3 p-3 bg-blue-50 border-l-4 border-blue-500 text-blue-700 rounded text-sm">
+            ${item.hint}
+          </div>
+          <textarea id="task-${i}" placeholder="Введи код..." 
+            class="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none font-mono text-sm" rows="3"></textarea>
+          <div id="task-answer-${i}" class="hidden"></div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function showHint(index) {
+      const hintEl = document.getElementById(`hint-${index}`);
+      hintEl.classList.toggle('hidden');
+    }
+
+    function initPractice() {
+      const container = document.getElementById('practice-container');
+      const allPracticeData = [...practiceData, ...mathPracticeData];
+      container.innerHTML = allPracticeData.map((item, i) => `
+        <div class="bg-gray-50 rounded-xl p-4">
+          <div class="flex items-center gap-4 mb-3">
+            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-bold">${i + 1}</span>
+            <code class="text-sm bg-gray-800 text-green-400 px-3 py-2 rounded-lg font-mono flex-1 overflow-x-auto">${item.code.replace(/\n/g, '<br>')}</code>
+          </div>
+          <input type="number" id="practice-${i}" placeholder="Введи результат..." 
+            class="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:outline-none">
+        </div>
+      `).join('');
+    }
+
+    function initQuiz() {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = quizData.map((q, qi) => `
+        <div class="bg-gray-50 rounded-xl p-4">
+          <p class="font-semibold text-gray-800 mb-3">${qi + 1}. ${q.question}</p>
+          <div class="space-y-2">
+            ${q.options.map((opt, oi) => `
+              <label class="flex items-center gap-3 p-3 bg-white rounded-lg cursor-pointer hover:bg-purple-50 transition">
+                <input type="radio" name="quiz-${qi}" value="${oi}" class="w-5 h-5 text-purple-600">
+                <span>${opt}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function startLesson() {
+      const name = document.getElementById('student-name').value.trim();
+      if (!name) {
+        document.getElementById('student-name').classList.add('border-red-500');
+        return;
+      }
+      currentStudent.name = name;
+      document.getElementById('student-display').textContent = name;
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('lesson-screen').classList.remove('hidden');
+    }
+
+    function showSection(section) {
+      ['theory', 'tasks', 'practice', 'quiz', 'reflection'].forEach(s => {
+        document.getElementById(s).classList.add('hidden');
+      });
+      document.getElementById(section).classList.remove('hidden');
+      
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.section === section) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    function updatePoints() {
+      currentStudent.totalScore = (currentStudent.theoryCompleted ? 10 : 0) + 
+        currentStudent.tasksScore + currentStudent.practiceScore + currentStudent.quizScore;
+      document.getElementById('total-points').textContent = currentStudent.totalScore;
+    }
+
+    function completeTheory() {
+      if (currentStudent.theoryCompleted) return;
+      currentStudent.theoryCompleted = true;
+      updatePoints();
+      const btn = document.getElementById('theory-btn');
+      btn.textContent = 'Завершено!';
+      btn.disabled = true;
+    }
+
+    function checkTasks() {
+      let correct = 0;
+      const allTasksData = [...tasksData, ...mathTasksData];
+      
+      allTasksData.forEach((item, i) => {
+        const input = document.getElementById(`task-${i}`);
+        const answerContainer = document.getElementById(`task-answer-${i}`);
+        const userAnswer = input.value.replace(/\s/g, '').toLowerCase();
+        const correctAnswer = item.answer.replace(/\s/g, '').toLowerCase();
+        
+        if (userAnswer === correctAnswer) {
+          correct++;
+          input.classList.remove('border-red-500', 'bg-red-50');
+          input.classList.add('border-green-500', 'bg-green-50');
+          answerContainer.classList.add('hidden');
+        } else {
+          input.classList.remove('border-green-500', 'bg-green-50');
+          input.classList.add('border-red-500', 'bg-red-50');
+          answerContainer.classList.remove('hidden');
+          const hint = item.hint ? `<br><strong>Подсказка:</strong> ${item.hint}` : '';
+          answerContainer.innerHTML = `<div class="p-3 bg-blue-50 border-l-4 border-blue-500 text-blue-700 rounded text-sm mt-2">✓ Правильный ответ:<br><code class="bg-white px-2 py-1 rounded font-mono font-bold text-xs">${item.answer}</code>${hint}</div>`;
+        }
+      });
+
+      currentStudent.tasksScore = correct * Math.floor(50 / allTasksData.length);
+      updatePoints();
+
+      const result = document.getElementById('tasks-result');
+      result.classList.remove('hidden');
+      if (correct === allTasksData.length) {
+        result.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-green-100 text-green-700';
+        result.textContent = `Отлично! Правильно: ${correct}/${allTasksData.length}`;
+      } else {
+        result.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-amber-100 text-amber-700';
+        result.textContent = `Правильно: ${correct}/${allTasksData.length}`;
+      }
+    }
+
+    function checkPractice() {
+      let correct = 0;
+      const allPracticeData = [...practiceData, ...mathPracticeData];
+      
+      allPracticeData.forEach((item, i) => {
+        const input = document.getElementById(`practice-${i}`);
+        const userAnswer = parseFloat(input.value);
+        
+        if (userAnswer === item.answer) {
+          correct++;
+          input.classList.remove('border-red-500');
+          input.classList.add('border-green-500', 'bg-green-50');
+        } else {
+          input.classList.remove('border-green-500', 'bg-green-50');
+          input.classList.add('border-red-500', 'bg-red-50');
+        }
+      });
+
+      currentStudent.practiceScore = correct * Math.floor(25 / allPracticeData.length);
+      updatePoints();
+
+      const result = document.getElementById('practice-result');
+      result.classList.remove('hidden');
+      if (correct === allPracticeData.length) {
+        result.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-green-100 text-green-700';
+        result.textContent = `Отлично! Правильно: ${correct}/${allPracticeData.length}`;
+      } else {
+        result.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-amber-100 text-amber-700';
+        result.textContent = `Правильно: ${correct}/${allPracticeData.length}`;
+      }
+    }
+
+    function checkQuiz() {
+      let correct = 0;
+      quizData.forEach((q, qi) => {
+        const selected = document.querySelector(`input[name="quiz-${qi}"]:checked`);
+        if (selected && parseInt(selected.value) === q.correct) {
+          correct++;
+        }
+      });
+
+      currentStudent.quizScore = correct * Math.floor(25 / quizData.length);
+      updatePoints();
+
+      const result = document.getElementById('quiz-result');
+      result.classList.remove('hidden');
+      if (correct === quizData.length) {
+        result.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-green-100 text-green-700';
+        result.textContent = `Отлично! Правильно: ${correct}/${quizData.length}`;
+      } else {
+        result.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-amber-100 text-amber-700';
+        result.textContent = `Правильно: ${correct}/${quizData.length}`;
+      }
+    }
+
+    function selectReflection(color) {
+      ['green', 'yellow', 'red'].forEach(c => {
+        document.getElementById(`light-${c}`).classList.remove('selected');
+      });
+      document.getElementById(`light-${color}`).classList.add('selected');
+      currentStudent.reflection = color;
+
+      const msg = document.getElementById('reflection-message');
+      msg.classList.remove('hidden');
+      
+      if (color === 'green') {
+        msg.className = 'p-4 rounded-xl text-center mb-6 bg-green-100 text-green-700';
+        msg.textContent = 'Отлично! Ты хорошо учился!';
+      } else if (color === 'yellow') {
+        msg.className = 'p-4 rounded-xl text-center mb-6 bg-yellow-100 text-yellow-700';
+        msg.textContent = 'Хорошо! Задай вопросы учителю.';
+      } else {
+        msg.className = 'p-4 rounded-xl text-center mb-6 bg-red-100 text-red-700';
+        msg.textContent = 'Не беда! Учитель тебе поможет.';
+      }
+
+      document.getElementById('submit-btn').disabled = false;
+    }
+
+    async function submitResults() {
+      const submitBtn = document.getElementById('submit-btn');
+      const status = document.getElementById('submit-status');
+      
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Отправляю...';
+      
+      try {
+        const result = await window.dataSdk.create({
+          student_name: currentStudent.name,
+          theory_completed: currentStudent.theoryCompleted,
+          tasks_score: currentStudent.tasksScore,
+          practice_score: currentStudent.practiceScore,
+          quiz_score: currentStudent.quizScore,
+          reflection: currentStudent.reflection,
+          total_score: currentStudent.totalScore,
+          completed_at: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          status.classList.remove('hidden');
+          status.className = 'mt-4 text-center text-green-600 font-bold';
+          status.textContent = 'Результаты отправлены!';
+          submitBtn.textContent = 'Отправлено!';
+          showFinalStats();
+        } else {
+          throw new Error('Ошибка сохранения');
+        }
+      } catch (e) {
+        status.classList.remove('hidden');
+        status.className = 'mt-4 text-center text-red-600';
+        status.textContent = 'Ошибка отправки';
+        submitBtn.textContent = 'Попробовать ещё';
+        submitBtn.disabled = false;
+      }
+    }
+
+    function showFinalStats() {
+      const finalStats = document.getElementById('final-stats');
+      finalStats.classList.remove('hidden');
+      document.getElementById('final-total').textContent = currentStudent.totalScore;
+      
+      let grade = '2';
+      if (currentStudent.totalScore >= 90) grade = '5';
+      else if (currentStudent.totalScore >= 70) grade = '4';
+      else if (currentStudent.totalScore >= 50) grade = '3';
+      
+      document.getElementById('final-grade').textContent = grade;
+    }
+
+    function getGrade(score) {
+      if (score >= 90) return '5';
+      if (score >= 70) return '4';
+      if (score >= 50) return '3';
+      return '2';
+    }
+
+    function showTeacherPanel() {
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('teacher-login').classList.remove('hidden');
+      document.getElementById('teacher-password').focus();
+    }
+
+    function checkTeacherPassword() {
+      const password = document.getElementById('teacher-password').value;
+      const errorEl = document.getElementById('password-error');
+      
+      if (password === '1234') {
+        document.getElementById('teacher-login').classList.add('hidden');
+        document.getElementById('teacher-panel').classList.remove('hidden');
+        updateTeacherPanel();
+        document.getElementById('teacher-password').value = '';
+      } else {
+        errorEl.classList.remove('hidden');
+        errorEl.textContent = 'Неправильный пароль';
+        document.getElementById('teacher-password').classList.add('border-red-500');
+        setTimeout(() => {
+          document.getElementById('teacher-password').classList.remove('border-red-500');
+          errorEl.classList.add('hidden');
+        }, 3000);
+      }
+    }
+
+    function logoutTeacher() {
+      document.getElementById('teacher-panel').classList.add('hidden');
+      document.getElementById('teacher-login').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+    }
+
+    async function clearAllResults() {
+      const btn = document.getElementById('clear-results-btn');
+      
+      if (studentData.length === 0) {
+        btn.textContent = 'Нечего удалять';
+        setTimeout(() => {
+          btn.textContent = '🗑️ Очистить результаты';
+          btn.disabled = false;
+        }, 2000);
+        return;
+      }
+
+      const originalText = btn.textContent;
+      btn.textContent = 'Удаляю...';
+      btn.disabled = true;
+
+      try {
+        for (const record of studentData) {
+          const result = await window.dataSdk.delete(record);
+          if (result.isError) {
+            throw new Error('Ошибка удаления');
+          }
+        }
+        btn.textContent = 'Удалено!';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }, 2000);
+      } catch (e) {
+        console.error('Ошибка:', e);
+        btn.textContent = 'Ошибка!';
+        btn.disabled = false;
+        setTimeout(() => {
+          btn.textContent = originalText;
+        }, 2000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const clearBtn = document.getElementById('clear-results-btn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', clearAllResults);
+      }
+    });
+
+    function hideTeacherPanel() {
+      document.getElementById('teacher-login').classList.add('hidden');
+      document.getElementById('teacher-panel').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+    }
+
+    function updateTeacherPanel() {
+      const tbody = document.getElementById('students-table');
+      
+      if (studentData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-gray-400">Нет результатов</td></tr>`;
+        document.getElementById('stat-total').textContent = '0';
+        document.getElementById('stat-green').textContent = '0';
+        document.getElementById('stat-yellow').textContent = '0';
+        document.getElementById('stat-red').textContent = '0';
+        return;
+      }
+
+      const greenCount = studentData.filter(s => s.reflection === 'green').length;
+      const yellowCount = studentData.filter(s => s.reflection === 'yellow').length;
+      const redCount = studentData.filter(s => s.reflection === 'red').length;
+
+      document.getElementById('stat-total').textContent = studentData.length;
+      document.getElementById('stat-green').textContent = greenCount;
+      document.getElementById('stat-yellow').textContent = yellowCount;
+      document.getElementById('stat-red').textContent = redCount;
+
+      tbody.innerHTML = studentData.map(s => {
+        const refEmoji = s.reflection === 'green' ? '✅' : 
+                        s.reflection === 'yellow' ? '⚠️' : 
+                        s.reflection === 'red' ? '❌' : '';
+        const grade = getGrade(s.total_score);
+        
+        return `
+          <tr class="border-t hover:bg-gray-50">
+            <td class="px-4 py-3 font-semibold">${s.student_name}</td>
+            <td class="px-4 py-3 text-center">${s.theory_completed ? '✅' : '❌'}</td>
+            <td class="px-4 py-3 text-center">${s.tasks_score}</td>
+            <td class="px-4 py-3 text-center">${s.practice_score}</td>
+            <td class="px-4 py-3 text-center">${s.quiz_score}</td>
+            <td class="px-4 py-3 text-center font-bold">${s.total_score}</td>
+            <td class="px-4 py-3 text-center">${refEmoji}</td>
+            <td class="px-4 py-3 text-center font-bold">${grade}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    initSDKs();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cbadb6ae571902d',t:'MTc3MDcxODY1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
